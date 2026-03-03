@@ -30,10 +30,10 @@ interface MusajilLogoProps {
 }
 
 const heightMap: Record<LogoSize, number> = {
-  sm: 36,
-  md: 48,
-  lg: 64,
-  xl: 88,
+  sm: 18,
+  md: 24,
+  lg: 32,
+  xl: 44,
 };
 
 /**
