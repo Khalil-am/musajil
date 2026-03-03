@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
+import { MusajilLogo } from "@/components/MusajilLogo";
 import { EventTypesSection } from "./sections/EventTypesSection";
 import { FeaturesDetailSection } from "./sections/FeaturesDetailSection";
 import { FeaturesOverviewSection } from "./sections/FeaturesOverviewSection";
@@ -37,16 +38,7 @@ export const Home = (): JSX.Element => {
       <header className="flex flex-col w-full items-start px-8 md:px-28 py-0 fixed top-0 left-0 bg-white border-b border-slate-200 z-50">
         <nav className="flex h-20 items-center justify-between w-full">
           <div className="inline-flex items-center">
-            <img
-              className="w-10 h-10"
-              alt="Musajil Logo"
-              src="/figmaAssets/background-15.svg"
-            />
-            <div className="inline-flex flex-col items-start pl-3">
-              <h1 className="font-bold text-slate-900 text-2xl leading-8 whitespace-nowrap [font-family:'Inter',Helvetica]">
-                Musajil
-              </h1>
-            </div>
+            <MusajilLogo variant="default" size="lg" />
           </div>
 
           <ul className="hidden md:inline-flex items-center gap-8">

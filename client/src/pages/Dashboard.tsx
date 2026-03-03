@@ -30,6 +30,7 @@ import {
   Menu,
   X,
 } from "lucide-react";
+import { MusajilLogo } from "@/components/MusajilLogo";
 import {
   AreaChart,
   Area,
@@ -219,13 +220,7 @@ function Sidebar({ activeNav, setActiveNav, user, onLogout, mobileOpen, setMobil
         ${mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
       `}>
         <div className="h-16 flex items-center px-6 border-b border-[#e2e8f0] shrink-0">
-          <div
-            className="w-8 h-8 rounded-lg flex items-center justify-center"
-            style={{ backgroundImage: "linear-gradient(135deg, rgb(59, 130, 246) 0%, rgb(37, 99, 235) 100%)" }}
-          >
-            <img src="/figmaAssets/background-15.svg" alt="" className="w-3.5 h-3.5 brightness-0 invert" />
-          </div>
-          <span className="ml-3 font-bold text-[#0f172a] text-xl [font-family:'Inter',Helvetica]">Musajil</span>
+          <MusajilLogo variant="sidebar" size="md" />
         </div>
 
         <nav className="flex-1 overflow-y-auto px-4 py-6 flex flex-col gap-1">

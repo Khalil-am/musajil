@@ -1,4 +1,5 @@
 import { Separator } from "@/components/ui/separator";
+import { MusajilLogo } from "@/components/MusajilLogo";
 
 const productLinks = [
   "Features",
@@ -37,16 +38,7 @@ export const FooterSection = (): JSX.Element => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 w-full">
           <div className="flex flex-col items-start gap-6 lg:col-span-1">
             <div className="flex items-center w-full">
-              <img
-                className="w-10 h-10"
-                alt="Musajil Logo"
-                src="/figmaAssets/background-15.svg"
-              />
-              <div className="flex flex-col items-start pl-3">
-                <h2 className="font-bold text-white text-2xl tracking-[0] leading-8 whitespace-nowrap [font-family:'Inter',Helvetica]">
-                  Musajil
-                </h2>
-              </div>
+              <MusajilLogo variant="white" size="lg" />
             </div>
 
             <p className="[font-family:'Inter',Helvetica] font-normal text-gray-400 text-base tracking-[0] leading-[26px]">

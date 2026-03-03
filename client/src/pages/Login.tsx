@@ -20,6 +20,7 @@ import {
   ArrowRight,
   Loader2,
 } from "lucide-react";
+import { MusajilLogo } from "@/components/MusajilLogo";
 import { SiGoogle, SiApple } from "react-icons/si";
 
 const MicrosoftIcon = () => (
@@ -104,19 +105,7 @@ export default function Login() {
 
         <div className="relative flex flex-col justify-between p-12 w-full z-10">
           <div className="flex items-center" data-testid="brand-logo">
-            <div
-              className="flex items-center justify-center w-12 h-12 rounded-lg"
-              style={{ backgroundImage: "linear-gradient(135deg, rgb(59, 130, 246) 0%, rgb(37, 99, 235) 100%)" }}
-            >
-              <img
-                src="/figmaAssets/background-15.svg"
-                alt="Musajil"
-                className="w-5 h-5 brightness-0 invert"
-              />
-            </div>
-            <span className="ml-3 text-white font-bold text-3xl [font-family:'Inter',Helvetica]">
-              Musajil
-            </span>
+            <MusajilLogo variant="white" size="lg" />
           </div>
 
           <div className="flex flex-col gap-8">

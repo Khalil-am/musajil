@@ -35,6 +35,7 @@ import {
   LockKeyhole,
   ChevronDown,
 } from "lucide-react";
+import { MusajilLogo } from "@/components/MusajilLogo";
 
 const MicrosoftIcon = () => (
   <svg width="20" height="20" viewBox="0 0 21 21" fill="none">
@@ -161,19 +162,7 @@ export default function Register() {
 
         <div className="relative flex flex-col justify-between p-16 w-full z-10">
           <div className="flex items-center">
-            <div
-              className="flex items-center justify-center w-12 h-12 rounded-xl backdrop-blur-sm"
-              style={{ backgroundColor: "rgba(255,255,255,0.2)" }}
-            >
-              <img
-                src="/figmaAssets/background-15.svg"
-                alt="Musajil"
-                className="w-5 h-5 brightness-0 invert"
-              />
-            </div>
-            <span className="ml-3 text-white font-bold text-3xl [font-family:'Inter',Helvetica]">
-              Musajil
-            </span>
+            <MusajilLogo variant="white" size="lg" />
           </div>
 
           <div className="flex flex-col gap-8">

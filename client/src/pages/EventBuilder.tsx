@@ -34,6 +34,7 @@ import {
   Menu,
   Zap,
 } from "lucide-react";
+import { MusajilLogo } from "@/components/MusajilLogo";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -254,18 +255,7 @@ function Sidebar({
       >
         {/* Logo */}
         <div className="h-16 flex items-center px-6 border-b border-slate-200 shrink-0">
-          <div
-            className="w-8 h-8 rounded-lg flex items-center justify-center"
-            style={{
-              backgroundImage:
-                "linear-gradient(135deg, rgb(59, 130, 246) 0%, rgb(37, 99, 235) 100%)",
-            }}
-          >
-            <CalendarDays className="w-4 h-4 text-white" />
-          </div>
-          <span className="ml-3 font-bold text-slate-900 text-xl font-['Inter']">
-            Musajil
-          </span>
+          <MusajilLogo variant="sidebar" size="md" />
         </div>
 
         {/* Nav */}
@@ -561,18 +551,9 @@ export default function EventBuilder() {
             >
               <Menu className="w-5 h-5" />
             </button>
-            <div
-              className="w-8 h-8 rounded-lg flex items-center justify-center lg:hidden"
-              style={{
-                backgroundImage:
-                  "linear-gradient(135deg, rgb(59, 130, 246) 0%, rgb(37, 99, 235) 100%)",
-              }}
-            >
-              <CalendarDays className="w-4 h-4 text-white" />
+            <div className="lg:hidden">
+              <MusajilLogo variant="sidebar" size="md" />
             </div>
-            <span className="font-bold text-slate-900 text-xl font-['Inter'] lg:hidden">
-              Musajil
-            </span>
           </div>
           <div className="flex items-center gap-5">
             <button className="flex items-center gap-1.5 text-sm text-gray-600 hover:text-gray-900 font-['Inter'] transition-colors">
