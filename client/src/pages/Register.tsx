@@ -162,7 +162,7 @@ export default function Register() {
 
         <div className="relative flex flex-col justify-between p-16 w-full z-10">
           <div className="flex items-center">
-            <MusajilLogo variant="white" size="lg" />
+            <MusajilLogo variant="white" size="xl" />
           </div>
 
           <div className="flex flex-col gap-8">

@@ -219,8 +219,8 @@ function Sidebar({ activeNav, setActiveNav, user, onLogout, mobileOpen, setMobil
         transition-transform duration-200
         ${mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
       `}>
-        <div className="h-16 flex items-center px-6 border-b border-[#e2e8f0] shrink-0">
-          <MusajilLogo variant="sidebar" size="md" />
+        <div className="h-20 flex items-center px-6 border-b border-[#e2e8f0] shrink-0">
+          <MusajilLogo variant="sidebar" size="lg" />
         </div>
 
         <nav className="flex-1 overflow-y-auto px-4 py-6 flex flex-col gap-1">

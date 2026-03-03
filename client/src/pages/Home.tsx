@@ -36,9 +36,9 @@ export const Home = (): JSX.Element => {
   return (
     <div className="flex flex-col items-start relative bg-white">
       <header className="flex flex-col w-full items-start px-8 md:px-28 py-0 fixed top-0 left-0 bg-white border-b border-slate-200 z-50">
-        <nav className="flex h-20 items-center justify-between w-full">
+        <nav className="flex h-24 items-center justify-between w-full">
           <div className="inline-flex items-center">
-            <MusajilLogo variant="default" size="lg" />
+            <MusajilLogo variant="default" size="xl" />
           </div>
 
           <ul className="hidden md:inline-flex items-center gap-8">

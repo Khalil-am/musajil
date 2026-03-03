@@ -38,7 +38,7 @@ export const FooterSection = (): JSX.Element => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 w-full">
           <div className="flex flex-col items-start gap-6 lg:col-span-1">
             <div className="flex items-center w-full">
-              <MusajilLogo variant="white" size="lg" />
+              <MusajilLogo variant="white" size="xl" />
             </div>
 
             <p className="[font-family:'Inter',Helvetica] font-normal text-gray-400 text-base tracking-[0] leading-[26px]">

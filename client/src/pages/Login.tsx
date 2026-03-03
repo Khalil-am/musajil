@@ -105,7 +105,7 @@ export default function Login() {
 
         <div className="relative flex flex-col justify-between p-12 w-full z-10">
           <div className="flex items-center" data-testid="brand-logo">
-            <MusajilLogo variant="white" size="lg" />
+            <MusajilLogo variant="white" size="xl" />
           </div>
 
           <div className="flex flex-col gap-8">

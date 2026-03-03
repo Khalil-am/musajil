@@ -254,8 +254,8 @@ function Sidebar({
         }`}
       >
         {/* Logo */}
-        <div className="h-16 flex items-center px-6 border-b border-slate-200 shrink-0">
-          <MusajilLogo variant="sidebar" size="md" />
+        <div className="h-20 flex items-center px-6 border-b border-slate-200 shrink-0">
+          <MusajilLogo variant="sidebar" size="lg" />
         </div>
 
         {/* Nav */}
@@ -552,7 +552,7 @@ export default function EventBuilder() {
               <Menu className="w-5 h-5" />
             </button>
             <div className="lg:hidden">
-              <MusajilLogo variant="sidebar" size="md" />
+              <MusajilLogo variant="sidebar" size="lg" />
             </div>
           </div>
           <div className="flex items-center gap-5">
