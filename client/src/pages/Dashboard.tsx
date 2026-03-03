@@ -1,36 +1,44 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
-import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
+import { MusajilLogo } from "@/components/MusajilLogo";
 import {
   LayoutDashboard,
   CalendarDays,
   Users,
-  BarChart3,
   ScanLine,
-  Puzzle,
-  MapPin,
-  UserCog,
-  Bell,
-  FileBarChart,
+  BarChart3,
+  TrendingUp,
   Settings,
   HelpCircle,
   Plus,
   AlertTriangle,
-  ArrowUpRight,
-  ArrowDownRight,
-  TrendingUp,
-  Clock,
+  Bell,
+  Cog,
   MoreVertical,
+  ChevronRight,
   Radio,
-  Eye,
-  ChevronDown,
-  LogOut,
+  Clock,
+  Activity,
+  Zap,
+  Printer,
+  MessageSquare,
+  Download,
   Menu,
   X,
+  LogOut,
+  MapPin,
+  Puzzle,
+  UserCog,
+  FileBarChart,
+  ArrowUpRight,
+  CheckCircle2,
+  Circle,
+  AlertCircle,
+  Eye,
+  Wifi,
 } from "lucide-react";
-import { MusajilLogo } from "@/components/MusajilLogo";
 import {
   AreaChart,
   Area,
@@ -39,190 +47,198 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  FunnelChart,
+  Funnel,
+  LabelList,
   BarChart,
   Bar,
   PieChart,
   Pie,
   Cell,
+  ReferenceLine,
 } from "recharts";
 
+// ─── Nav items ────────────────────────────────────────────────────────────────
 const navItems = [
-  { icon: LayoutDashboard, label: "Dashboard", active: true },
-  { icon: CalendarDays, label: "Events", active: false },
-  { icon: Users, label: "Attendees", active: false },
-  { icon: BarChart3, label: "Analytics", active: false },
-  { icon: ScanLine, label: "Check-in", active: false },
-  { icon: Puzzle, label: "Integrations", active: false },
+  { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
+  { icon: CalendarDays, label: "Events", path: "/events" },
+  { icon: Users, label: "Attendees", path: "/attendees" },
+  { icon: ScanLine, label: "Check-In", path: "/check-in" },
+  { icon: BarChart3, label: "Analytics", path: "/analytics" },
+  { icon: TrendingUp, label: "Ops Forecast", path: "/ops-forecast" },
 ];
 
 const manageItems = [
-  { icon: MapPin, label: "Venues", active: false },
-  { icon: UserCog, label: "Team Members", active: false },
-  { icon: Bell, label: "Notifications", active: false },
-  { icon: FileBarChart, label: "Staff & Permissions", active: false },
+  { icon: CalendarDays, label: "Schedule", path: "/schedule" },
+  { icon: MessageSquare, label: "Communications", path: "/communications" },
+  { icon: Puzzle, label: "Integrations", path: "/integrations" },
+  { icon: UserCog, label: "Staff & Permissions", path: "/staff" },
 ];
 
-const bottomItems = [
-  { icon: Settings, label: "Settings", active: false },
-  { icon: HelpCircle, label: "Help & Support", active: false },
-];
-
-const events = [
-  {
-    id: 1,
-    name: "TechCon 2024",
-    location: "Main Convention Center",
-    status: "live",
-    statusLabel: "Live Now",
-    statusColor: "text-emerald-500",
-    borderColor: "border-emerald-500 border-2",
-    dotColor: "bg-emerald-500",
-    stat1Label: "Checked In",
-    stat1Value: "1,923",
-    stat2Label: "Capacity",
-    stat2Value: "98%",
-    stat2Color: "text-amber-500",
-    actionLabel: "Open Ops Center",
-    actionBg: "bg-emerald-500 hover:bg-emerald-600 text-white",
-    actionIcon: Radio,
-  },
-  {
-    id: 2,
-    name: "Product Launch Summit",
-    location: "Grand Ballroom",
-    status: "upcoming",
-    statusLabel: "Tomorrow",
-    statusColor: "text-blue-500",
-    borderColor: "border-[#e2e8f0]",
-    dotColor: "bg-blue-500",
-    stat1Label: "Registered",
-    stat1Value: "847",
-    stat2Label: "Expected",
-    stat2Value: "720",
-    stat2Color: "text-[#0f172a]",
-    actionLabel: "View Details",
-    actionBg: "bg-[#f8fafc] hover:bg-gray-100 text-[#0f172a]",
-    actionIcon: Eye,
-  },
-  {
-    id: 3,
-    name: "Annual Gala Dinner",
-    location: "Riverside Hotel",
-    status: "scheduled",
-    statusLabel: "Dec 15",
-    statusColor: "text-gray-500",
-    borderColor: "border-[#e2e8f0]",
-    dotColor: "bg-gray-400",
-    stat1Label: "Registered",
-    stat1Value: "312",
-    stat2Label: "Capacity",
-    stat2Value: "62%",
-    stat2Color: "text-emerald-500",
-    actionLabel: "View Details",
-    actionBg: "bg-[#f8fafc] hover:bg-gray-100 text-[#0f172a]",
-    actionIcon: Eye,
-  },
-];
-
-const kpiCards = [
-  {
-    label: "Total Registered",
-    value: "2,847",
-    change: "12%",
-    changeDir: "up" as const,
-    bgColor: "bg-blue-100",
-    iconColor: "text-blue-500",
-    icon: Users,
-  },
-  {
-    label: "Checked In",
-    value: "1,923",
-    change: "8%",
-    changeDir: "up" as const,
-    bgColor: "bg-green-100",
-    iconColor: "text-green-500",
-    icon: ScanLine,
-  },
-  {
-    label: "Venue Capacity",
-    value: "98%",
-    change: "Alert",
-    changeDir: "alert" as const,
-    bgColor: "bg-orange-100",
-    iconColor: "text-orange-500",
-    icon: AlertTriangle,
-    borderColor: "border-amber-500",
-  },
-  {
-    label: "Avg Wait Time",
-    value: "4.2m",
-    change: "15%",
-    changeDir: "down" as const,
-    bgColor: "bg-purple-100",
-    iconColor: "text-purple-500",
-    icon: Clock,
-  },
-];
-
+// ─── Data ─────────────────────────────────────────────────────────────────────
 const arrivalData = [
-  { time: "8AM", actual: 120, predicted: 100 },
-  { time: "9AM", actual: 350, predicted: 320 },
-  { time: "10AM", actual: 580, predicted: 540 },
-  { time: "11AM", actual: 720, predicted: 700 },
-  { time: "12PM", actual: 850, predicted: 820 },
-  { time: "1PM", actual: 920, predicted: 950 },
-  { time: "2PM", actual: 1050, predicted: 1020 },
-  { time: "3PM", actual: 1180, predicted: 1150 },
-  { time: "4PM", actual: 1350, predicted: 1300 },
-  { time: "5PM", actual: 1500, predicted: 1450 },
+  { time: "9:00", actual: 45, forecast: 50 },
+  { time: "9:15", actual: 82, forecast: 80 },
+  { time: "9:30", actual: 120, forecast: 115 },
+  { time: "9:45", actual: 175, forecast: 160 },
+  { time: "10:00", actual: 230, forecast: 210 },
+  { time: "10:15", actual: 290, forecast: 270 },
+  { time: "10:30", actual: 340, forecast: 330 },
+  { time: "10:45", actual: 380, forecast: 380 },
+  { time: "11:00", actual: 420, forecast: 420 },
+  { time: "11:15", actual: 460, forecast: 460 },
+  { time: "11:30", actual: 490, forecast: 500 },
+  { time: "11:45", actual: 510, forecast: 540 },
+  { time: "12:00", actual: 530, forecast: 580 },
+  { time: "12:15", actual: null, forecast: 610 },
+  { time: "12:30", actual: null, forecast: 630 },
+  { time: "12:45", actual: null, forecast: 620 },
+  { time: "1:00", actual: null, forecast: 590 },
 ];
 
-const registrationData = [
-  { day: "Mon", registrations: 45 },
-  { day: "Tue", registrations: 72 },
-  { day: "Wed", registrations: 58 },
-  { day: "Thu", registrations: 95 },
-  { day: "Fri", registrations: 120 },
-  { day: "Sat", registrations: 85 },
-  { day: "Sun", registrations: 60 },
+const funnelData = [
+  { name: "Visited Page", value: 5200, fill: "#93c5fd" },
+  { name: "Started Registration", value: 3800, fill: "#60a5fa" },
+  { name: "Completed Form", value: 2900, fill: "#3b82f6" },
+  { name: "Payment", value: 1200, fill: "#2563eb" },
+  { name: "Confirmed", value: 847, fill: "#1d4ed8" },
 ];
 
-const capacityData = [
-  { name: "Occupied", value: 1923, color: "#3b82f6" },
-  { name: "Remaining", value: 77, color: "#e2e8f0" },
+const registrationByType = [
+  { name: "Standard", value: 51.1, color: "#3b82f6" },
+  { name: "Student", value: 19.11, color: "#22c55e" },
+  { name: "Staff", value: 13.49, color: "#ef4444" },
+  { name: "VIP", value: 13.13, color: "#8b5cf6" },
+  { name: "Speaker", value: 3.13, color: "#f59e0b" },
+];
+
+const sessionAttendance = [
+  { session: "Keynote", capacity: 500, attendance: 450 },
+  { session: "AI Workshop", capacity: 100, attendance: 98 },
+  { session: "Design Thinking", capacity: 100, attendance: 67 },
+  { session: "Product Demo", capacity: 80, attendance: 45 },
+  { session: "Panel Discussion", capacity: 200, attendance: 180 },
+];
+
+const roomStatus = [
+  { name: "Main Hall", subtitle: "Keynote Session", current: 450, max: 500, pct: 90, color: "#22c55e", status: "ok" },
+  { name: "Breakout A", subtitle: "AI Workshop", current: 98, max: 100, pct: 98, color: "#f59e0b", status: "warn" },
+  { name: "Breakout B", subtitle: "Design Thinking", current: 67, max: 100, pct: 67, color: "#3b82f6", status: "ok" },
+  { name: "Breakout C", subtitle: "Product Demo", current: 45, max: 80, pct: 56, color: "#22c55e", status: "ok" },
+  { name: "Registration", subtitle: "Check-In Desk", current: 12, max: null, pct: null, color: "#6b7280", status: "queue", queue: "in queue" },
 ];
 
 const recentActivity = [
-  { name: "Sarah Johnson", action: "checked in", time: "2 min ago", event: "TechCon 2024" },
-  { name: "Mike Chen", action: "registered", time: "5 min ago", event: "Product Launch Summit" },
-  { name: "Emily Davis", action: "checked in", time: "8 min ago", event: "TechCon 2024" },
-  { name: "Alex Rivera", action: "registered", time: "12 min ago", event: "Annual Gala Dinner" },
-  { name: "Jordan Lee", action: "checked in", time: "15 min ago", event: "TechCon 2024" },
-  { name: "Pat Williams", action: "registered", time: "18 min ago", event: "TechCon 2024" },
+  { dot: "#22c55e", text: "152 attendees checked in", time: "2 minutes ago" },
+  { dot: "#3b82f6", text: 'Session "AI Workshop" started', time: "8 minutes ago" },
+  { dot: "#f59e0b", text: "Capacity alert: Breakout A", time: "15 minutes ago" },
+  { dot: "#22c55e", text: "87 new registrations", time: "32 minutes ago" },
+  { dot: "#22c55e", text: "Keynote session started", time: "1 hour ago" },
 ];
 
-function Sidebar({ activeNav, setActiveNav, user, onLogout, mobileOpen, setMobileOpen }: {
-  activeNav: string;
-  setActiveNav: (n: string) => void;
-  user: any;
-  onLogout: () => void;
+const scheduleData = [
+  {
+    time: "9:00 AM",
+    session: "Registration & Coffee",
+    subtitle: "Welcome & Networking",
+    room: "Main Lobby",
+    capacity: null,
+    status: "Completed",
+    statusColor: "bg-green-100 text-green-700",
+    highlight: false,
+  },
+  {
+    time: "10:00 AM",
+    session: "Opening Keynote",
+    subtitle: "Dr. Sarah Mitchell",
+    room: "Main Hall",
+    capacity: "450/500 (90%)",
+    capacityColor: "text-gray-700",
+    status: "In Progress",
+    statusColor: "text-blue-600",
+    statusDot: "#3b82f6",
+    highlight: true,
+  },
+  {
+    time: "11:30 AM",
+    session: "AI & Machine Learning",
+    subtitle: "Interactive Workshop",
+    room: "Breakout A",
+    capacity: "98/100 (98%)",
+    capacityColor: "text-amber-600 font-semibold",
+    status: "Near Capacity",
+    statusColor: "bg-amber-100 text-amber-700",
+    statusDot: undefined,
+    highlight: false,
+  },
+  {
+    time: "11:30 AM",
+    session: "Design Thinking",
+    subtitle: "Hands-on Session",
+    room: "Breakout B",
+    capacity: "67/100 (67%)",
+    capacityColor: "text-gray-700",
+    status: "Starting Soon",
+    statusColor: "text-gray-600",
+    highlight: false,
+  },
+  {
+    time: "1:00 PM",
+    session: "Networking Lunch",
+    subtitle: "Catered Buffet",
+    room: "Dining Hall",
+    capacity: null,
+    status: "Upcoming",
+    statusColor: "text-gray-400",
+    highlight: false,
+  },
+];
+
+// ─── Custom Tooltip ───────────────────────────────────────────────────────────
+function ArrivalTooltip({ active, payload, label }: any) {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-white border border-slate-200 rounded-lg shadow-lg px-3 py-2 text-xs">
+        <p className="font-semibold text-slate-700 mb-1">{label}</p>
+        {payload.map((p: any, i: number) => (
+          <p key={i} style={{ color: p.color }}>
+            {p.name === "actual" ? "Actual" : "Forecast"}: {p.value ?? "–"}
+          </p>
+        ))}
+      </div>
+    );
+  }
+  return null;
+}
+
+// ─── Sidebar ──────────────────────────────────────────────────────────────────
+function Sidebar({ mobileOpen, setMobileOpen, activeNav, setActiveNav, onLogout }: {
   mobileOpen: boolean;
   setMobileOpen: (v: boolean) => void;
+  activeNav: string;
+  setActiveNav: (v: string) => void;
+  onLogout: () => void;
 }) {
   return (
     <>
+      {/* Mobile overlay */}
       {mobileOpen && (
-        <div className="fixed inset-0 bg-black/40 z-30 lg:hidden" onClick={() => setMobileOpen(false)} />
+        <div
+          className="fixed inset-0 bg-black/40 z-30 lg:hidden"
+          onClick={() => setMobileOpen(false)}
+        />
       )}
       <aside className={`
-        fixed lg:static inset-y-0 left-0 z-40 w-64 bg-white border-r border-[#e2e8f0] flex flex-col h-screen
-        transition-transform duration-200
+        fixed lg:static inset-y-0 left-0 z-40 w-64 bg-white border-r border-[#e2e8f0]
+        flex flex-col h-screen transition-transform duration-200
         ${mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
       `}>
+        {/* Logo */}
         <div className="h-20 flex items-center px-6 border-b border-[#e2e8f0] shrink-0">
           <MusajilLogo variant="sidebar" size="lg" />
         </div>
 
+        {/* Nav */}
         <nav className="flex-1 overflow-y-auto px-4 py-6 flex flex-col gap-1">
           {navItems.map((item) => {
             const isActive = activeNav === item.label;
@@ -230,63 +246,63 @@ function Sidebar({ activeNav, setActiveNav, user, onLogout, mobileOpen, setMobil
               <button
                 key={item.label}
                 onClick={() => { setActiveNav(item.label); setMobileOpen(false); }}
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium [font-family:'Inter',Helvetica] w-full text-left transition-colors ${
-                  isActive ? "bg-[#3b82f6] text-white" : "text-[#374151] hover:bg-gray-100"
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors font-['Inter'] ${
+                  isActive
+                    ? "bg-blue-600 text-white"
+                    : "text-gray-700 hover:bg-gray-100"
                 }`}
-                data-testid={`nav-${item.label.toLowerCase()}`}
               >
-                <item.icon className="w-4 h-4" />
+                <item.icon className="w-4 h-4 shrink-0" />
                 {item.label}
               </button>
             );
           })}
 
-          <div className="mt-4 pt-4 border-t border-[#e2e8f0]">
-            <p className="px-4 py-2 text-xs font-medium text-gray-400 uppercase tracking-wider [font-family:'Inter',Helvetica]">Manage</p>
+          {/* Manage section */}
+          <div className="pt-4 mt-2 border-t border-slate-200">
+            <p className="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 font-['Inter']">Manage</p>
             {manageItems.map((item) => (
               <button
                 key={item.label}
                 onClick={() => { setActiveNav(item.label); setMobileOpen(false); }}
-                className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium [font-family:'Inter',Helvetica] w-full text-left transition-colors ${
-                  activeNav === item.label ? "bg-[#3b82f6] text-white" : "text-[#374151] hover:bg-gray-100"
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors font-['Inter'] ${
+                  activeNav === item.label
+                    ? "bg-blue-600 text-white"
+                    : "text-gray-700 hover:bg-gray-100"
                 }`}
-                data-testid={`nav-${item.label.toLowerCase().replace(/\s+/g, "-")}`}
               >
-                <item.icon className="w-4 h-4" />
-                {item.label}
-              </button>
-            ))}
-          </div>
-
-          <div className="mt-4 pt-4 border-t border-[#e2e8f0]">
-            {bottomItems.map((item) => (
-              <button
-                key={item.label}
-                onClick={() => { setActiveNav(item.label); setMobileOpen(false); }}
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium [font-family:'Inter',Helvetica] w-full text-left transition-colors ${
-                  activeNav === item.label ? "bg-[#3b82f6] text-white" : "text-[#374151] hover:bg-gray-100"
-                }`}
-                data-testid={`nav-${item.label.toLowerCase().replace(/\s+/g, "-")}`}
-              >
-                <item.icon className="w-4 h-4" />
+                <item.icon className="w-4 h-4 shrink-0" />
                 {item.label}
               </button>
             ))}
           </div>
         </nav>
 
-        <div className="border-t border-[#e2e8f0] px-4 py-4 shrink-0">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-semibold text-sm">
-              {user?.name ? user.name.split(" ").map((n: string) => n[0]).join("").substring(0, 2).toUpperCase() : "U"}
+        {/* Bottom */}
+        <div className="px-4 pb-4 border-t border-[#e2e8f0] pt-4 flex flex-col gap-1">
+          <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors font-['Inter']">
+            <Settings className="w-4 h-4 shrink-0" />
+            Settings
+          </button>
+          <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors font-['Inter']">
+            <HelpCircle className="w-4 h-4 shrink-0" />
+            Help &amp; Support
+          </button>
+
+          {/* User profile */}
+          <div className="flex items-center justify-between mt-2 px-2">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs font-bold shrink-0">SC</div>
+              <div className="flex flex-col">
+                <span className="text-sm font-semibold text-gray-900 font-['Inter']">Sarah Chen</span>
+                <span className="text-xs text-gray-500 font-['Inter']">Event Organizer</span>
+              </div>
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-[#0f172a] truncate [font-family:'Inter',Helvetica]" data-testid="text-user-name">
-                {user?.name || "User"}
-              </p>
-              <p className="text-xs text-[#6b7280] [font-family:'Inter',Helvetica]">Event Organizer</p>
-            </div>
-            <button onClick={onLogout} className="text-gray-400 hover:text-gray-600 p-1" data-testid="button-logout">
+            <button
+              onClick={onLogout}
+              className="p-1.5 rounded hover:bg-gray-100 text-gray-500 hover:text-red-500 transition-colors"
+              title="Log out"
+            >
               <LogOut className="w-4 h-4" />
             </button>
           </div>
@@ -296,377 +312,583 @@ function Sidebar({ activeNav, setActiveNav, user, onLogout, mobileOpen, setMobil
   );
 }
 
+// ─── Main Dashboard Component ─────────────────────────────────────────────────
 export default function Dashboard() {
-  const { user, logout, isLoading, isAuthenticated } = useAuth();
   const [, navigate] = useLocation();
+  const { user, logout, isAuthenticated } = useAuth();
   const { toast } = useToast();
+  const [mobileOpen, setMobileOpen] = useState(false);
   const [activeNav, setActiveNav] = useState("Dashboard");
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [alertDismissed, setAlertDismissed] = useState(false);
-  const [timeRange, setTimeRange] = useState("Today");
+  const [scheduleView, setScheduleView] = useState<"timeline" | "list">("timeline");
 
+  // Redirect if not authenticated
   useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
+    if (isAuthenticated === false) {
       navigate("/login");
     }
-  }, [isLoading, isAuthenticated, navigate]);
-
-  if (isLoading || !isAuthenticated) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-[#f8fafc]">
-        <div className="animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full" />
-      </div>
-    );
-  }
+  }, [isAuthenticated, navigate]);
 
   const handleLogout = async () => {
     try {
       await logout.mutateAsync();
-      toast({ title: "Signed out", description: "You've been signed out successfully." });
+      toast({ title: "Logged out successfully" });
       navigate("/login");
     } catch {
-      toast({ title: "Error", description: "Failed to sign out.", variant: "destructive" });
+      navigate("/login");
     }
   };
 
   return (
-    <div className="flex min-h-screen bg-[#f8fafc]">
+    <div className="flex h-screen bg-[#f8fafc] overflow-hidden font-['Inter']">
       <Sidebar
+        mobileOpen={mobileOpen}
+        setMobileOpen={setMobileOpen}
         activeNav={activeNav}
         setActiveNav={setActiveNav}
-        user={user}
         onLogout={handleLogout}
-        mobileOpen={mobileMenuOpen}
-        setMobileOpen={setMobileMenuOpen}
       />
 
-      <div className="flex-1 flex flex-col min-w-0">
-        <header className="bg-white border-b border-[#e2e8f0] h-16 flex items-center justify-between px-4 md:px-8 shrink-0">
+      {/* Main content */}
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+        {/* Top bar */}
+        <header className="h-16 bg-white border-b border-[#e2e8f0] flex items-center justify-between px-6 shrink-0">
           <div className="flex items-center gap-4">
             <button
-              className="lg:hidden p-2 text-gray-500 hover:text-gray-700"
-              onClick={() => setMobileMenuOpen(true)}
-              data-testid="button-mobile-menu"
+              className="lg:hidden p-2 rounded-lg hover:bg-gray-100"
+              onClick={() => setMobileOpen(true)}
             >
               <Menu className="w-5 h-5" />
             </button>
-            <h1 className="font-bold text-[#0f172a] text-2xl [font-family:'Inter',Helvetica]" data-testid="text-page-title">
-              Mission Control
-            </h1>
+            <h1 className="text-xl font-bold text-[#0f172a] font-['Inter']">Mission Control</h1>
           </div>
-          <div className="flex items-center gap-2">
-            <Button
-              className="bg-[#3b82f6] hover:bg-blue-600 gap-2 text-white"
-              data-testid="button-new-event"
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => navigate("/event-builder")}
+              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors font-['Inter']"
             >
               <Plus className="w-4 h-4" />
-              <span className="hidden sm:inline">New Event</span>
-            </Button>
-            <button className="relative p-2 rounded-lg hover:bg-gray-100" data-testid="button-notifications">
-              <Bell className="w-[18px] h-[18px] text-gray-500" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full" />
+              New Event
             </button>
-            <button className="p-2 rounded-lg hover:bg-gray-100" data-testid="button-user-menu">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-semibold text-xs">
-                {user?.name ? user.name.split(" ").map((n: string) => n[0]).join("").substring(0, 2).toUpperCase() : "U"}
-              </div>
+            <button className="relative p-2 rounded-lg hover:bg-gray-100 text-gray-600">
+              <Bell className="w-5 h-5" />
+              <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
+            </button>
+            <button className="p-2 rounded-lg hover:bg-gray-100 text-gray-600">
+              <Cog className="w-5 h-5" />
             </button>
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto p-4 md:p-8">
-          <div className="flex flex-col gap-6 max-w-[1200px]">
-            {!alertDismissed && (
-              <div
-                className="rounded-xl p-4 shadow-lg relative overflow-hidden"
-                style={{ backgroundImage: "linear-gradient(to right, #f59e0b, #f97316)" }}
+        {/* Scrollable content */}
+        <main className="flex-1 overflow-y-auto px-6 py-6 flex flex-col gap-6">
+
+          {/* ── Risk Alert Banner ── */}
+          {!alertDismissed && (
+            <div className="bg-amber-50 border border-amber-300 rounded-xl px-5 py-4 flex items-start justify-between gap-4">
+              <div className="flex items-start gap-3">
+                <AlertTriangle className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm font-bold text-amber-800 font-['Inter']">2 Active Risk Alerts</p>
+                  <p className="text-xs text-amber-700 mt-0.5 font-['Inter']">Predicted capacity issues require immediate attention</p>
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    <span className="inline-flex items-center gap-1.5 bg-amber-100 text-amber-800 text-xs font-medium px-2.5 py-1 rounded-full font-['Inter']">
+                      <AlertTriangle className="w-3 h-3" />
+                      Breakout A: 105% at 11:30 AM
+                    </span>
+                    <span className="inline-flex items-center gap-1.5 bg-amber-100 text-amber-800 text-xs font-medium px-2.5 py-1 rounded-full font-['Inter']">
+                      <Clock className="w-3 h-3" />
+                      Registration: 12min wait predicted
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <button
+                onClick={() => setAlertDismissed(true)}
+                className="p-1 rounded hover:bg-amber-100 text-amber-600 shrink-0"
               >
-                <div className="flex items-start gap-4">
-                  <AlertTriangle className="w-6 h-6 text-white shrink-0 mt-0.5" />
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-white text-lg [font-family:'Inter',Helvetica]" data-testid="text-alert-title">
-                      2 Active Risk Alerts
-                    </h3>
-                    <p className="text-white/90 text-sm mt-1 [font-family:'Inter',Helvetica]">
-                      Predicted capacity issues require immediate attention
-                    </p>
-                    <div className="flex flex-wrap gap-3 mt-3">
-                      <button className="flex items-center gap-2 bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-full text-white text-xs font-medium transition-colors" data-testid="button-alert-action-1">
-                        <AlertTriangle className="w-3 h-3" />
-                        Main Hall: 92% capacity predicted by 3PM
-                      </button>
-                      <button className="flex items-center gap-2 bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-full text-white text-xs font-medium transition-colors" data-testid="button-alert-action-2">
-                        <AlertTriangle className="w-3 h-3" />
-                        VIP Lounge: Queue time exceeding 8 minutes
-                      </button>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => setAlertDismissed(true)}
-                    className="text-white/80 hover:text-white p-1"
-                    data-testid="button-dismiss-alert"
-                  >
-                    <X className="w-4 h-4" />
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          )}
+
+          {/* ── Active Events ── */}
+          <section>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-base font-bold text-[#0f172a] font-['Inter']">Active Events</h2>
+              <span className="text-sm text-gray-500 font-['Inter']">Today</span>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* TechCon 2024 — Live */}
+              <div className="bg-white border-2 border-blue-500 rounded-xl p-5 flex flex-col gap-3 shadow-sm">
+                <div className="flex items-center justify-between">
+                  <span className="inline-flex items-center gap-1.5 bg-green-100 text-green-700 text-xs font-bold px-2.5 py-1 rounded-full font-['Inter']">
+                    <Radio className="w-3 h-3" />
+                    LIVE NOW
+                  </span>
+                  <button className="p-1 rounded hover:bg-gray-100 text-gray-400">
+                    <MoreVertical className="w-4 h-4" />
                   </button>
                 </div>
-              </div>
-            )}
-
-            <div className="flex items-center justify-between">
-              <h2 className="font-bold text-[#0f172a] text-lg [font-family:'Inter',Helvetica]">Your Events</h2>
-              <div className="relative">
-                <select
-                  value={timeRange}
-                  onChange={(e) => setTimeRange(e.target.value)}
-                  className="appearance-none bg-white border border-[#e2e8f0] rounded-lg px-4 py-2 pr-8 text-sm font-medium text-[#374151] [font-family:'Inter',Helvetica] cursor-pointer"
-                  data-testid="select-time-range"
-                >
-                  <option value="Today">Today</option>
-                  <option value="This Week">This Week</option>
-                  <option value="This Month">This Month</option>
-                  <option value="All Time">All Time</option>
-                </select>
-                <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-              {events.map((event) => (
-                <div
-                  key={event.id}
-                  className={`bg-white border ${event.borderColor} rounded-xl p-6 shadow-md relative`}
-                  data-testid={`card-event-${event.id}`}
-                >
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-2">
-                      <div className={`w-3 h-3 rounded-full ${event.dotColor} ${event.status === "live" ? "animate-pulse" : ""}`} />
-                      <span className={`text-xs font-bold uppercase tracking-wider ${event.statusColor} [font-family:'Inter',Helvetica]`}>
-                        {event.statusLabel}
-                      </span>
-                    </div>
-                    <button className="text-gray-400 hover:text-gray-600" data-testid={`button-event-menu-${event.id}`}>
-                      <MoreVertical className="w-4 h-4" />
-                    </button>
+                <div>
+                  <p className="text-base font-bold text-[#0f172a] font-['Inter']">TechCon 2024</p>
+                  <p className="text-xs text-gray-500 font-['Inter']">Main Convention Center</p>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <p className="text-xs text-gray-500 font-['Inter']">Checked In</p>
+                    <p className="text-2xl font-bold text-[#0f172a] font-['Inter']">1,923</p>
                   </div>
-                  <h3 className="font-bold text-[#0f172a] text-lg [font-family:'Inter',Helvetica]" data-testid={`text-event-name-${event.id}`}>
-                    {event.name}
-                  </h3>
-                  <p className="text-[#4b5563] text-sm mt-1 [font-family:'Inter',Helvetica]">{event.location}</p>
-                  <div className="grid grid-cols-2 gap-3 mt-4">
-                    <div className="bg-[#f8fafc] rounded-lg p-3">
-                      <p className="text-[#4b5563] text-xs [font-family:'Inter',Helvetica]">{event.stat1Label}</p>
-                      <p className="font-bold text-[#0f172a] text-xl mt-1 [font-family:'Inter',Helvetica]">{event.stat1Value}</p>
-                    </div>
-                    <div className="bg-[#f8fafc] rounded-lg p-3">
-                      <p className="text-[#4b5563] text-xs [font-family:'Inter',Helvetica]">{event.stat2Label}</p>
-                      <p className={`font-bold text-xl mt-1 [font-family:'Inter',Helvetica] ${event.stat2Color}`}>{event.stat2Value}</p>
-                    </div>
+                  <div>
+                    <p className="text-xs text-gray-500 font-['Inter']">Capacity</p>
+                    <p className="text-2xl font-bold text-amber-500 font-['Inter']">98%</p>
                   </div>
-                  <button
-                    className={`w-full mt-4 py-2 rounded-lg font-semibold text-base flex items-center justify-center gap-2 transition-colors ${event.actionBg} [font-family:'Inter',Helvetica]`}
-                    data-testid={`button-event-action-${event.id}`}
-                  >
-                    <event.actionIcon className="w-4 h-4" />
-                    {event.actionLabel}
+                </div>
+                <button className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold py-2.5 rounded-lg transition-colors font-['Inter']">
+                  <Activity className="w-4 h-4" />
+                  Open Ops Center
+                </button>
+              </div>
+
+              {/* Product Launch Summit — Tomorrow */}
+              <div className="bg-white border border-[#e2e8f0] rounded-xl p-5 flex flex-col gap-3 shadow-sm">
+                <div className="flex items-center justify-between">
+                  <span className="inline-flex items-center gap-1.5 bg-blue-100 text-blue-700 text-xs font-bold px-2.5 py-1 rounded-full font-['Inter']">
+                    TOMORROW
+                  </span>
+                  <button className="p-1 rounded hover:bg-gray-100 text-gray-400">
+                    <MoreVertical className="w-4 h-4" />
                   </button>
                 </div>
-              ))}
-            </div>
-
-            <div>
-              <h2 className="font-bold text-[#0f172a] text-lg mb-4 [font-family:'Inter',Helvetica]">
-                Key Metrics - TechCon 2024
-              </h2>
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                {kpiCards.map((kpi, index) => (
-                  <div
-                    key={index}
-                    className={`bg-white border ${kpi.borderColor || "border-[#e2e8f0]"} rounded-xl p-6 shadow-md`}
-                    data-testid={`card-kpi-${index}`}
-                  >
-                    <div className="flex items-center justify-between mb-3">
-                      <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${kpi.bgColor}`}>
-                        <kpi.icon className={`w-5 h-5 ${kpi.iconColor}`} />
-                      </div>
-                      <div className="flex items-center gap-1">
-                        {kpi.changeDir === "up" && <ArrowUpRight className="w-3.5 h-3.5 text-emerald-500" />}
-                        {kpi.changeDir === "down" && <ArrowDownRight className="w-3.5 h-3.5 text-emerald-500" />}
-                        {kpi.changeDir === "alert" && <AlertTriangle className="w-3.5 h-3.5 text-amber-500" />}
-                        <span className={`text-sm font-semibold [font-family:'Inter',Helvetica] ${
-                          kpi.changeDir === "alert" ? "text-amber-500" : "text-emerald-500"
-                        }`}>
-                          {kpi.change}
-                        </span>
-                      </div>
-                    </div>
-                    <p className="font-bold text-[#0f172a] text-3xl [font-family:'Inter',Helvetica]">{kpi.value}</p>
-                    <p className="text-[#4b5563] text-sm mt-1 [font-family:'Inter',Helvetica]">{kpi.label}</p>
+                <div>
+                  <p className="text-base font-bold text-[#0f172a] font-['Inter']">Product Launch Summit</p>
+                  <p className="text-xs text-gray-500 font-['Inter']">Grand Ballroom</p>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <p className="text-xs text-gray-500 font-['Inter']">Registered</p>
+                    <p className="text-2xl font-bold text-[#0f172a] font-['Inter']">847</p>
                   </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-              <div className="xl:col-span-2 flex flex-col gap-6">
-                <div className="bg-white border border-[#e2e8f0] rounded-xl p-6 shadow-md">
-                  <div className="flex items-center justify-between mb-6">
-                    <h3 className="font-bold text-[#0f172a] text-lg [font-family:'Inter',Helvetica]" data-testid="text-chart-arrivals">
-                      Arrival Forecast
-                    </h3>
-                    <div className="flex items-center gap-4 text-xs [font-family:'Inter',Helvetica]">
-                      <div className="flex items-center gap-1.5">
-                        <div className="w-3 h-0.5 bg-blue-500 rounded" />
-                        <span className="text-gray-500">Actual</span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <div className="w-3 h-0.5 bg-blue-300 rounded border-dashed" />
-                        <span className="text-gray-500">Predicted</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="h-[280px]">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <AreaChart data={arrivalData}>
-                        <defs>
-                          <linearGradient id="actualGradient" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.2} />
-                            <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
-                          </linearGradient>
-                        </defs>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                        <XAxis dataKey="time" tick={{ fontSize: 12, fill: "#6b7280" }} axisLine={false} tickLine={false} />
-                        <YAxis tick={{ fontSize: 12, fill: "#6b7280" }} axisLine={false} tickLine={false} />
-                        <Tooltip
-                          contentStyle={{
-                            backgroundColor: "white",
-                            border: "1px solid #e2e8f0",
-                            borderRadius: "8px",
-                            fontSize: "12px",
-                          }}
-                        />
-                        <Area
-                          type="monotone"
-                          dataKey="predicted"
-                          stroke="#93c5fd"
-                          strokeDasharray="5 5"
-                          fill="none"
-                          strokeWidth={2}
-                        />
-                        <Area
-                          type="monotone"
-                          dataKey="actual"
-                          stroke="#3b82f6"
-                          fill="url(#actualGradient)"
-                          strokeWidth={2}
-                        />
-                      </AreaChart>
-                    </ResponsiveContainer>
+                  <div>
+                    <p className="text-xs text-gray-500 font-['Inter']">Expected</p>
+                    <p className="text-2xl font-bold text-[#0f172a] font-['Inter']">720</p>
                   </div>
                 </div>
-
-                <div className="bg-white border border-[#e2e8f0] rounded-xl p-6 shadow-md">
-                  <div className="flex items-center justify-between mb-6">
-                    <h3 className="font-bold text-[#0f172a] text-lg [font-family:'Inter',Helvetica]" data-testid="text-chart-registrations">
-                      Registration Trend
-                    </h3>
-                    <span className="text-xs text-gray-500 [font-family:'Inter',Helvetica]">Last 7 days</span>
-                  </div>
-                  <div className="h-[240px]">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={registrationData}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
-                        <XAxis dataKey="day" tick={{ fontSize: 12, fill: "#6b7280" }} axisLine={false} tickLine={false} />
-                        <YAxis tick={{ fontSize: 12, fill: "#6b7280" }} axisLine={false} tickLine={false} />
-                        <Tooltip
-                          contentStyle={{
-                            backgroundColor: "white",
-                            border: "1px solid #e2e8f0",
-                            borderRadius: "8px",
-                            fontSize: "12px",
-                          }}
-                        />
-                        <Bar dataKey="registrations" fill="#3b82f6" radius={[4, 4, 0, 0]} barSize={32} />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  </div>
-                </div>
+                <button className="w-full flex items-center justify-center gap-2 border border-[#e2e8f0] text-gray-700 hover:bg-gray-50 text-sm font-semibold py-2.5 rounded-lg transition-colors font-['Inter']">
+                  <Eye className="w-4 h-4" />
+                  View Details
+                </button>
               </div>
 
-              <div className="flex flex-col gap-6">
-                <div className="bg-white border border-[#e2e8f0] rounded-xl p-6 shadow-md">
-                  <h3 className="font-bold text-[#0f172a] text-lg mb-4 [font-family:'Inter',Helvetica]" data-testid="text-chart-capacity">
-                    Venue Capacity
-                  </h3>
-                  <div className="h-[180px] flex items-center justify-center">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <PieChart>
-                        <Pie
-                          data={capacityData}
-                          cx="50%"
-                          cy="50%"
-                          innerRadius={55}
-                          outerRadius={75}
-                          paddingAngle={2}
-                          dataKey="value"
-                          startAngle={90}
-                          endAngle={-270}
-                        >
-                          {capacityData.map((entry, index) => (
-                            <Cell key={index} fill={entry.color} />
-                          ))}
-                        </Pie>
-                      </PieChart>
-                    </ResponsiveContainer>
+              {/* Annual Training Day — Next Week */}
+              <div className="bg-white border border-[#e2e8f0] rounded-xl p-5 flex flex-col gap-3 shadow-sm">
+                <div className="flex items-center justify-between">
+                  <span className="inline-flex items-center gap-1.5 bg-purple-100 text-purple-700 text-xs font-bold px-2.5 py-1 rounded-full font-['Inter']">
+                    NEXT WEEK
+                  </span>
+                  <button className="p-1 rounded hover:bg-gray-100 text-gray-400">
+                    <MoreVertical className="w-4 h-4" />
+                  </button>
+                </div>
+                <div>
+                  <p className="text-base font-bold text-[#0f172a] font-['Inter']">Annual Training Day</p>
+                  <p className="text-xs text-gray-500 font-['Inter']">Corporate Campus</p>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <p className="text-xs text-gray-500 font-['Inter']">Registered</p>
+                    <p className="text-2xl font-bold text-[#0f172a] font-['Inter']">312</p>
                   </div>
-                  <div className="text-center -mt-4">
-                    <p className="text-3xl font-bold text-[#0f172a] [font-family:'Inter',Helvetica]">96%</p>
-                    <p className="text-sm text-[#4b5563] [font-family:'Inter',Helvetica]">Current occupancy</p>
-                  </div>
-                  <div className="flex justify-between mt-4 pt-4 border-t border-[#e2e8f0]">
-                    <div className="text-center">
-                      <p className="text-sm font-bold text-[#0f172a] [font-family:'Inter',Helvetica]">1,923</p>
-                      <p className="text-xs text-[#4b5563] [font-family:'Inter',Helvetica]">Inside</p>
-                    </div>
-                    <div className="text-center">
-                      <p className="text-sm font-bold text-[#0f172a] [font-family:'Inter',Helvetica]">2,000</p>
-                      <p className="text-xs text-[#4b5563] [font-family:'Inter',Helvetica]">Max</p>
-                    </div>
-                    <div className="text-center">
-                      <p className="text-sm font-bold text-amber-500 [font-family:'Inter',Helvetica]">77</p>
-                      <p className="text-xs text-[#4b5563] [font-family:'Inter',Helvetica]">Remaining</p>
-                    </div>
+                  <div>
+                    <p className="text-xs text-gray-500 font-['Inter']">Capacity</p>
+                    <p className="text-2xl font-bold text-green-500 font-['Inter']">62%</p>
                   </div>
                 </div>
+                <button className="w-full flex items-center justify-center gap-2 border border-[#e2e8f0] text-gray-700 hover:bg-gray-50 text-sm font-semibold py-2.5 rounded-lg transition-colors font-['Inter']">
+                  <Eye className="w-4 h-4" />
+                  View Details
+                </button>
+              </div>
+            </div>
+          </section>
 
-                <div className="bg-white border border-[#e2e8f0] rounded-xl p-6 shadow-md flex-1">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-bold text-[#0f172a] text-lg [font-family:'Inter',Helvetica]" data-testid="text-activity-feed">
-                      Recent Activity
-                    </h3>
-                    <button className="text-blue-500 text-sm font-medium hover:text-blue-600 [font-family:'Inter',Helvetica]" data-testid="button-view-all-activity">
-                      View All
-                    </button>
-                  </div>
-                  <div className="flex flex-col gap-3">
-                    {recentActivity.map((activity, index) => (
-                      <div key={index} className="flex items-start gap-3" data-testid={`activity-item-${index}`}>
-                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center text-gray-600 font-semibold text-xs shrink-0 mt-0.5">
-                          {activity.name.split(" ").map(n => n[0]).join("")}
+          {/* ── Two-column layout: Main + Right Panel ── */}
+          <div className="grid grid-cols-1 xl:grid-cols-[1fr_300px] gap-6">
+            {/* LEFT: Key Metrics + Charts */}
+            <div className="flex flex-col gap-6">
+
+              {/* Key Metrics */}
+              <section>
+                <h2 className="text-base font-bold text-[#0f172a] mb-4 font-['Inter']">Key Metrics — TechCon 2024</h2>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {[
+                    { icon: Users, label: "Total Registered", value: "2,847", delta: "+12%", deltaColor: "text-green-600", bg: "bg-blue-50", iconColor: "text-blue-600" },
+                    { icon: ScanLine, label: "Checked In", value: "1,923", delta: "+8%", deltaColor: "text-green-600", bg: "bg-green-50", iconColor: "text-green-600" },
+                    { icon: AlertTriangle, label: "Venue Capacity", value: "98%", delta: "Alert", deltaColor: "text-amber-600", bg: "bg-amber-50", iconColor: "text-amber-600" },
+                    { icon: Clock, label: "Avg Wait Time", value: "4.2m", delta: "—0%", deltaColor: "text-gray-500", bg: "bg-purple-50", iconColor: "text-purple-600" },
+                  ].map((m) => (
+                    <div key={m.label} className="bg-white border border-[#e2e8f0] rounded-xl p-5 shadow-sm">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className={`w-9 h-9 rounded-lg ${m.bg} flex items-center justify-center`}>
+                          <m.icon className={`w-4 h-4 ${m.iconColor}`} />
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm [font-family:'Inter',Helvetica]">
-                            <span className="font-semibold text-[#0f172a]">{activity.name}</span>
-                            {" "}
-                            <span className="text-[#4b5563]">{activity.action}</span>
-                          </p>
-                          <div className="flex items-center gap-2 mt-0.5">
-                            <span className="text-xs text-[#6b7280] [font-family:'Inter',Helvetica]">{activity.event}</span>
-                            <span className="text-xs text-[#9ca3af] [font-family:'Inter',Helvetica]">{activity.time}</span>
+                        <span className={`text-xs font-semibold ${m.deltaColor} font-['Inter']`}>{m.delta}</span>
+                      </div>
+                      <p className="text-2xl font-bold text-[#0f172a] font-['Inter']">{m.value}</p>
+                      <p className="text-xs text-gray-500 mt-1 font-['Inter']">{m.label}</p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              {/* Real-Time Arrivals Chart */}
+              <div className="bg-white border border-[#e2e8f0] rounded-xl p-6 shadow-sm">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-base font-bold text-[#0f172a] font-['Inter']">Real-Time Arrivals</h3>
+                  <div className="flex items-center gap-3">
+                    <span className="inline-flex items-center gap-1.5 bg-purple-100 text-purple-700 text-xs font-semibold px-2.5 py-1 rounded-full font-['Inter']">
+                      <Wifi className="w-3 h-3" />
+                      AI Forecast Active
+                    </span>
+                    <span className="text-xs text-gray-500 font-['Inter']">Last Hour</span>
+                  </div>
+                </div>
+                <div className="h-[200px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={arrivalData} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
+                      <defs>
+                        <linearGradient id="actualGrad" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.15} />
+                          <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                      <XAxis dataKey="time" tick={{ fontSize: 10, fill: "#94a3b8" }} tickLine={false} axisLine={false} interval={2} />
+                      <YAxis tick={{ fontSize: 10, fill: "#94a3b8" }} tickLine={false} axisLine={false} />
+                      <Tooltip content={<ArrivalTooltip />} />
+                      <Area
+                        type="monotone"
+                        dataKey="actual"
+                        stroke="#3b82f6"
+                        strokeWidth={2}
+                        fill="url(#actualGrad)"
+                        dot={false}
+                        connectNulls={false}
+                        name="actual"
+                      />
+                      <Area
+                        type="monotone"
+                        dataKey="forecast"
+                        stroke="#a78bfa"
+                        strokeWidth={2}
+                        strokeDasharray="5 4"
+                        fill="none"
+                        dot={false}
+                        name="forecast"
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+                <div className="flex items-center gap-4 mt-3">
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-6 h-0.5 bg-blue-500 rounded" />
+                    <span className="text-xs text-gray-500 font-['Inter']">Actual</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-6 h-0.5 bg-purple-400 rounded border-dashed border-t-2 border-purple-400" style={{ background: "none", borderTop: "2px dashed #a78bfa" }} />
+                    <span className="text-xs text-gray-500 font-['Inter']">Forecast</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Registration Funnel */}
+              <div className="bg-white border border-[#e2e8f0] rounded-xl p-6 shadow-sm">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-base font-bold text-[#0f172a] font-['Inter']">Registration Funnel</h3>
+                  <button className="text-blue-600 text-sm font-semibold hover:text-blue-700 flex items-center gap-1 font-['Inter']">
+                    View Full Report <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
+                <div className="flex flex-col gap-2">
+                  {funnelData.map((item, i) => {
+                    const pct = Math.round((item.value / funnelData[0].value) * 100);
+                    return (
+                      <div key={item.name} className="flex items-center gap-3">
+                        <span className="text-xs text-gray-500 w-36 shrink-0 font-['Inter']">{item.name}</span>
+                        <div className="flex-1 bg-gray-100 rounded-full h-7 overflow-hidden">
+                          <div
+                            className="h-full rounded-full flex items-center px-3 transition-all"
+                            style={{ width: `${pct}%`, backgroundColor: item.fill }}
+                          >
+                            <span className="text-xs font-semibold text-white font-['Inter']">{item.value.toLocaleString()}</span>
                           </div>
                         </div>
+                        <span className="text-xs text-gray-400 w-10 text-right font-['Inter']">{pct}%</span>
                       </div>
-                    ))}
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Today's Schedule */}
+              <div className="bg-white border border-[#e2e8f0] rounded-xl shadow-sm overflow-hidden">
+                <div className="flex items-center justify-between px-6 py-4 border-b border-[#e2e8f0]">
+                  <h3 className="text-base font-bold text-[#0f172a] font-['Inter']">Today's Schedule</h3>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setScheduleView("timeline")}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors font-['Inter'] ${
+                        scheduleView === "timeline" ? "bg-blue-600 text-white" : "text-gray-600 hover:bg-gray-100"
+                      }`}
+                    >
+                      Timeline View
+                    </button>
+                    <button
+                      onClick={() => setScheduleView("list")}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors font-['Inter'] ${
+                        scheduleView === "list" ? "bg-blue-600 text-white" : "text-gray-600 hover:bg-gray-100"
+                      }`}
+                    >
+                      List View
+                    </button>
                   </div>
+                </div>
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-[#e2e8f0] bg-gray-50">
+                      <th className="text-left px-6 py-3 text-xs font-semibold text-gray-500 font-['Inter']">Time</th>
+                      <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 font-['Inter']">Session</th>
+                      <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 font-['Inter']">Room</th>
+                      <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 font-['Inter']">Capacity</th>
+                      <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 font-['Inter']">Status</th>
+                      <th className="px-4 py-3" />
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {scheduleData.map((row, i) => (
+                      <tr
+                        key={i}
+                        className={`border-b border-[#e2e8f0] last:border-0 ${row.highlight ? "bg-blue-50" : "hover:bg-gray-50"}`}
+                      >
+                        <td className="px-6 py-3.5 text-xs font-medium text-gray-600 whitespace-nowrap font-['Inter']">{row.time}</td>
+                        <td className="px-4 py-3.5">
+                          <p className="text-sm font-semibold text-[#0f172a] font-['Inter']">{row.session}</p>
+                          <p className="text-xs text-gray-500 font-['Inter']">{row.subtitle}</p>
+                        </td>
+                        <td className="px-4 py-3.5 text-sm text-gray-600 font-['Inter']">{row.room}</td>
+                        <td className="px-4 py-3.5">
+                          {row.capacity ? (
+                            <span className={`text-sm font-['Inter'] ${row.capacityColor}`}>{row.capacity}</span>
+                          ) : (
+                            <span className="text-gray-300">—</span>
+                          )}
+                        </td>
+                        <td className="px-4 py-3.5">
+                          {row.statusColor.includes("bg-") ? (
+                            <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold font-['Inter'] ${row.statusColor}`}>
+                              {row.status}
+                            </span>
+                          ) : (
+                            <span className={`inline-flex items-center gap-1.5 text-sm font-medium font-['Inter'] ${row.statusColor}`}>
+                              {row.statusDot && (
+                                <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: row.statusDot }} />
+                              )}
+                              {row.status}
+                            </span>
+                          )}
+                        </td>
+                        <td className="px-4 py-3.5">
+                          <button className="p-1 rounded hover:bg-gray-100 text-gray-400">
+                            <MoreVertical className="w-4 h-4" />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Attendee Insights */}
+              <section>
+                <h2 className="text-base font-bold text-[#0f172a] mb-4 font-['Inter']">Attendee Insights</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Registration by Type */}
+                  <div className="bg-white border border-[#e2e8f0] rounded-xl p-6 shadow-sm">
+                    <h3 className="text-sm font-bold text-[#0f172a] mb-4 font-['Inter']">Registration by Type</h3>
+                    <div className="flex items-center gap-4">
+                      <div className="w-[160px] h-[160px] shrink-0">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <PieChart>
+                            <Pie
+                              data={registrationByType}
+                              cx="50%"
+                              cy="50%"
+                              innerRadius={45}
+                              outerRadius={70}
+                              paddingAngle={2}
+                              dataKey="value"
+                            >
+                              {registrationByType.map((entry, i) => (
+                                <Cell key={i} fill={entry.color} />
+                              ))}
+                            </Pie>
+                          </PieChart>
+                        </ResponsiveContainer>
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        {registrationByType.map((item) => (
+                          <div key={item.name} className="flex items-center gap-2">
+                            <div className="w-3 h-3 rounded-sm shrink-0" style={{ backgroundColor: item.color }} />
+                            <span className="text-xs text-gray-600 font-['Inter']">{item.name}</span>
+                            <span className="text-xs font-semibold text-gray-800 ml-auto font-['Inter']">{item.value}%</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Session Attendance */}
+                  <div className="bg-white border border-[#e2e8f0] rounded-xl p-6 shadow-sm">
+                    <h3 className="text-sm font-bold text-[#0f172a] mb-4 font-['Inter']">Session Attendance</h3>
+                    <div className="h-[160px]">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={sessionAttendance} margin={{ top: 0, right: 0, left: -30, bottom: 0 }}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+                          <XAxis dataKey="session" tick={{ fontSize: 9, fill: "#94a3b8" }} tickLine={false} axisLine={false} />
+                          <YAxis tick={{ fontSize: 9, fill: "#94a3b8" }} tickLine={false} axisLine={false} />
+                          <Tooltip />
+                          <Bar dataKey="capacity" fill="#e2e8f0" radius={[3, 3, 0, 0]} barSize={18} name="Capacity" />
+                          <Bar dataKey="attendance" fill="#3b82f6" radius={[3, 3, 0, 0]} barSize={18} name="Attendance" />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                    <div className="flex items-center gap-4 mt-2">
+                      <div className="flex items-center gap-1.5">
+                        <div className="w-3 h-3 rounded-sm bg-slate-200" />
+                        <span className="text-xs text-gray-500 font-['Inter']">Capacity</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <div className="w-3 h-3 rounded-sm bg-blue-500" />
+                        <span className="text-xs text-gray-500 font-['Inter']">Attendance</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              {/* Quick Actions */}
+              <div className="bg-white border border-[#e2e8f0] rounded-xl p-6 shadow-sm">
+                <h3 className="text-base font-bold text-[#0f172a] mb-4 font-['Inter']">Quick Actions</h3>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  <button className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold py-3 rounded-xl transition-colors font-['Inter']">
+                    <ScanLine className="w-4 h-4" />
+                    Open Scanner
+                  </button>
+                  <button className="flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold py-3 rounded-xl transition-colors font-['Inter']">
+                    <Printer className="w-4 h-4" />
+                    Print Badges
+                  </button>
+                  <button className="flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold py-3 rounded-xl transition-colors font-['Inter']">
+                    <MessageSquare className="w-4 h-4" />
+                    Send Message
+                  </button>
+                  <button className="flex items-center justify-center gap-2 border border-[#e2e8f0] text-gray-700 hover:bg-gray-50 text-sm font-semibold py-3 rounded-xl transition-colors font-['Inter']">
+                    <Download className="w-4 h-4" />
+                    Export Data
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* RIGHT PANEL */}
+            <div className="flex flex-col gap-6">
+
+              {/* Room Status */}
+              <div className="bg-white border border-[#e2e8f0] rounded-xl p-5 shadow-sm">
+                <h3 className="text-sm font-bold text-[#0f172a] mb-4 font-['Inter']">Room Status</h3>
+                <div className="flex flex-col gap-3">
+                  {roomStatus.map((room) => (
+                    <div key={room.name} className="flex flex-col gap-1">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: room.color }} />
+                          <div>
+                            <p className="text-xs font-semibold text-[#0f172a] font-['Inter']">{room.name}</p>
+                            <p className="text-[10px] text-gray-400 font-['Inter']">{room.subtitle}</p>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          {room.queue ? (
+                            <p className="text-xs font-semibold text-gray-600 font-['Inter']">{room.current} <span className="text-gray-400 font-normal">{room.queue}</span></p>
+                          ) : (
+                            <>
+                              <p className={`text-xs font-semibold font-['Inter'] ${room.status === "warn" ? "text-amber-600" : "text-gray-700"}`}>
+                                {room.current}/{room.max}
+                              </p>
+                              <p className="text-[10px] text-gray-400 font-['Inter']">{room.pct}%</p>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                      {room.pct !== null && (
+                        <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                          <div
+                            className="h-full rounded-full transition-all"
+                            style={{ width: `${room.pct}%`, backgroundColor: room.color }}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Peak Forecast */}
+              <div className="bg-white border border-[#e2e8f0] rounded-xl p-5 shadow-sm">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-sm font-bold text-[#0f172a] font-['Inter']">Peak Forecast</h3>
+                  <TrendingUp className="w-5 h-5 text-purple-500" />
+                </div>
+                <div className="flex flex-col gap-4">
+                  <div>
+                    <p className="text-xs text-gray-500 font-['Inter']">Predicted Peak Time</p>
+                    <p className="text-2xl font-bold text-[#0f172a] font-['Inter']">12:15 PM</p>
+                    <p className="text-xs text-gray-400 font-['Inter']">±15 min confidence</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500 font-['Inter']">Expected Volume</p>
+                    <p className="text-2xl font-bold text-[#0f172a] font-['Inter']">847</p>
+                    <p className="text-xs text-gray-400 font-['Inter']">±50 attendees</p>
+                  </div>
+                  <div className="flex flex-col gap-2 pt-2 border-t border-[#e2e8f0]">
+                    <div className="flex items-center gap-2">
+                      <AlertTriangle className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                      <p className="text-xs text-amber-700 font-['Inter']">Queue time: 12min predicted</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <AlertTriangle className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                      <p className="text-xs text-amber-700 font-['Inter']">Breakout A overflow risk</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Recent Activity */}
+              <div className="bg-white border border-[#e2e8f0] rounded-xl p-5 shadow-sm">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-sm font-bold text-[#0f172a] font-['Inter']">Recent Activity</h3>
+                  <button className="text-blue-600 text-xs font-semibold hover:text-blue-700 font-['Inter']">View All Activity</button>
+                </div>
+                <div className="flex flex-col gap-3">
+                  {recentActivity.map((item, i) => (
+                    <div key={i} className="flex items-start gap-3">
+                      <div className="w-2 h-2 rounded-full shrink-0 mt-1.5" style={{ backgroundColor: item.dot }} />
+                      <div>
+                        <p className="text-xs text-[#0f172a] font-['Inter']">{item.text}</p>
+                        <p className="text-[10px] text-gray-400 mt-0.5 font-['Inter']">{item.time}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
