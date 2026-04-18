@@ -3,23 +3,14 @@ import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { MusajilLogo } from "@/components/MusajilLogo";
-import { EventTypesSection } from "./sections/EventTypesSection";
 import { FeaturesDetailSection } from "./sections/FeaturesDetailSection";
-import { FeaturesOverviewSection } from "./sections/FeaturesOverviewSection";
 import { FooterSection } from "./sections/FooterSection";
 import { HeroSection } from "./sections/HeroSection";
-import { IntegrationSection } from "./sections/IntegrationSection";
-import { LogosSection } from "./sections/LogosSection";
-import { OpsForecastSection } from "./sections/OpsForecastSection";
 import { PricingSection } from "./sections/PricingSection";
-import { TestimonialsSection } from "./sections/TestimonialsSection";
 
 const navigationItems = [
   { label: "Features", href: "#features" },
-  { label: "Solutions", href: "#solutions" },
-  { label: "Integrations", href: "#integrations" },
   { label: "Pricing", href: "#pricing" },
-  { label: "Resources", href: "#resources" },
 ];
 
 export const Home = (): JSX.Element => {
@@ -117,15 +108,9 @@ export const Home = (): JSX.Element => {
       </header>
 
       <main className="flex flex-col w-full pt-20">
-        <FeaturesDetailSection />
-        <LogosSection />
         <HeroSection />
+        <FeaturesDetailSection />
         <PricingSection />
-        <FeaturesOverviewSection />
-        <IntegrationSection />
-        <TestimonialsSection />
-        <OpsForecastSection />
-        <EventTypesSection />
         <FooterSection />
       </main>
     </div>
