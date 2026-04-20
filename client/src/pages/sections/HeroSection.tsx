@@ -16,7 +16,7 @@ const features = [
   },
   {
     icon: "/figmaAssets/background-2.svg",
-    title: "Offline-Tolerant CheckIcon-In",
+    title: "Offline-Tolerant Check-In",
     description:
       "QR scanning, kiosks, and badge printing that work even when connectivity drops. Multiple check-in modes for any scenario.",
     items: [

@@ -1,6 +1,4 @@
-import { readFileSync, writeFileSync } from "fs";
-import { globSync } from "fs";
-import { readdirSync, statSync } from "fs";
+import { readFileSync, writeFileSync, readdirSync, statSync } from "fs";
 import { join } from "path";
 
 function walk(dir, out = []) {

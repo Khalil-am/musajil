@@ -8,7 +8,10 @@
     "build": "vite build",
     "start": "vite preview",
     "check": "tsc --noEmit",
-    "db:push": "drizzle-kit push"
+    "db:push": "drizzle-kit push",
+    "db:migrate": "node scripts/migrate.mjs",
+    "smoke": "node scripts/smoke-prod.mjs",
+    "fix-ext": "node scripts/fix-ext.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

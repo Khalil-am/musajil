@@ -58,7 +58,13 @@ export default function PublicRegister() {
       });
       if (!res.ok) {
         const text = await res.text();
-        throw new Error(text || `Error ${res.status}`);
+        try {
+          const parsed = JSON.parse(text);
+          throw new Error(parsed?.message || `Error ${res.status}`);
+        } catch (e) {
+          if (e instanceof Error && e.message && !e.message.startsWith("Unexpected")) throw e;
+          throw new Error(text || `Error ${res.status}`);
+        }
       }
       return res.json();
     },

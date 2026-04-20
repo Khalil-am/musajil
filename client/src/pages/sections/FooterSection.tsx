@@ -112,7 +112,7 @@ export const FooterSection = (): JSX.Element => {
 
         <div className="flex flex-col md:flex-row items-center justify-between w-full gap-4">
           <p className="[font-family:'Inter',Helvetica] font-normal text-gray-400 text-sm tracking-[0] leading-5 whitespace-nowrap">
-            © 2024 Musajil. All rights reserved.
+            © {new Date().getFullYear()} Musajil. All rights reserved.
           </p>
 
           <nav className="flex items-center gap-6">
